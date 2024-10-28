@@ -1,2 +1,2 @@
 rootProject.name = "easyumJava"
-include 'approvalService', 'allServicesModels', 'mainService'
+include 'approvalService', 'allServicesModels', 'mainService', 'namedService'

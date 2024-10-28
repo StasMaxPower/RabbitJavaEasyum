@@ -20,6 +20,12 @@ public class RabbitMqListeners {
 
     @RabbitListener(queues = "approval-results-queue")
     public void newClientsEventsQueueListener(Client client) {
-        clientService.save(client);
+        if (client.getVerificationStatus().name().equals("REJECTED")) {
+            clientService.remove(client);
+            log.info("Клиент с именем {} и статусом {} удален", client.getName(), client.getVerificationStatus());
+        } else {
+            clientService.save(client);
+            log.info("Клиент с именем {} и статусом {} сохранен", client.getName(), client.getVerificationStatus());
+        }
     }
 }

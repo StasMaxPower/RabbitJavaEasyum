@@ -46,7 +46,7 @@ public class RabbitMqConfig {
     public Binding newClientsEventsQueueBinding(){
         return BindingBuilder.bind(newClientsEventsQueue())
                 .to(topicExchange())
-                .with("clients.new_created");
+                .with("clients.after.named");
     }
 
     @Bean

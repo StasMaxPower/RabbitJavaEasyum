@@ -8,5 +8,9 @@ public interface ClientService {
     List<Client> findAll();
     Client save(Client client);
     Client saveAndSendForApprove(Client client);
+
+    void remove(Client client);
+
     Client saveAndSendForApproveAndWait(Client client);
+
 }

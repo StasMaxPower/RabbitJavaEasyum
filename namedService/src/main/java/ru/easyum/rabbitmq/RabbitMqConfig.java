@@ -10,12 +10,11 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static ru.easyum.services.RabbitMqService.MAIN_EXCHANGE;
-
 
 @Configuration
 public class RabbitMqConfig {
 
+    public static final String MAIN_EXCHANGE = "main-exchange";
     @Bean
     public Jackson2JsonMessageConverter jsonConverter() {
         return new Jackson2JsonMessageConverter();
@@ -24,7 +23,6 @@ public class RabbitMqConfig {
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         var rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setReplyTimeout(15000);
         rabbitTemplate.setMessageConverter(jsonConverter());
         rabbitTemplate.setExchange(MAIN_EXCHANGE);
         return rabbitTemplate;
@@ -37,14 +35,26 @@ public class RabbitMqConfig {
 
     @Bean
     public Queue approvalResultsEventsQueue(){
-        return new Queue("approval-results-queue");
+        return new Queue("named-queue");
     }
 
     @Bean
     public Binding approvalResultsEventsQueueBinding(){
         return BindingBuilder.bind(approvalResultsEventsQueue())
                 .to(topicExchange())
-                .with("clients.approvalNamed_result");
+                .with("clients.new_created");
+    }
+
+    @Bean
+    public Queue approvalNamedResultsEventsQueue(){
+        return new Queue("approval-named-queue");
+    }
+
+    @Bean
+    public Binding approvalNamedResultsEventsQueueBinding(){
+        return BindingBuilder.bind(approvalNamedResultsEventsQueue())
+                .to(topicExchange())
+                .with("clients.approval_result");
     }
 
 }
